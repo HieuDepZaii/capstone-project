@@ -3,18 +3,24 @@
   "title": "group",
   "type": "object",
   "properties": {
-    "name": {
+    "title": {
       "type": "string",
       "minLength": 1,
       "maxLength": 255
     },
-    "dueDate": {
+    "content": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255
+    },
+    "createDate": {
       "type": "string"
     }
   },
   "required": [
-    "name",
-    "dueDate"
+    "title",
+    "content",
+    "createDate"
   ],
   "additionalProperties": false
 }

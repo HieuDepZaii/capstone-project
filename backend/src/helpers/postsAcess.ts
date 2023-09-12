@@ -1,20 +1,20 @@
 import * as AWS from 'aws-sdk'
 import { DocumentClient } from 'aws-sdk/clients/dynamodb'
 import { createLogger } from '../utils/logger'
-import { TodoItem } from '../models/TodoItem'
-import { TodoUpdate } from '../models/TodoUpdate';
+import { PostItem } from '../models/PostItem'
+import { PostUpdate } from '../models/PostUpdate';
 
 const AWSXRay = require('aws-xray-sdk')
 const XAWS = AWSXRay.captureAWS(AWS)
 
-const logger = createLogger('TodosAccess')
+const logger = createLogger('PostsAccess')
 
 // TODO: Implement the dataLayer logic
 const documentClient = new XAWS.DynamoDB.DocumentClient();
 
-const tableName = process.env.TODOS_TABLE;
+const tableName = process.env.POST_TABLE;
 
-export async function findAllTodoByUserId(userId: string): Promise<TodoItem[]> {
+export async function findAllPostByUserId(userId: string): Promise<PostItem[]> {
     logger.info("Getting Todo", { userId: userId });
     const params: DocumentClient.QueryInput = {
         TableName: tableName,
@@ -27,12 +27,12 @@ export async function findAllTodoByUserId(userId: string): Promise<TodoItem[]> {
         }
     };
     const result = await documentClient.query(params).promise();
-    const items: TodoItem[] = result.Items as TodoItem[];
+    const items: PostItem[] = result.Items as PostItem[];
     logger.info("Count Todos", { count: items.length });
     return items;
 }
 
-export async function create(item: TodoItem): Promise<TodoItem> {
+export async function create(item: PostItem): Promise<PostItem> {
     logger.info("Creating Todo");
     const params: DocumentClient.PutItemInput = {
         TableName: tableName,
@@ -44,10 +44,10 @@ export async function create(item: TodoItem): Promise<TodoItem> {
 }
 
 export async function update(
-    item: TodoUpdate,
+    item: PostUpdate,
     userId: string,
     todoId: string
-): Promise<TodoUpdate> {
+): Promise<PostUpdate> {
     logger.info("Updating Todo", { userId: userId, todoId: todoId });
     const params: DocumentClient.UpdateItemInput = {
         TableName: tableName,
@@ -55,21 +55,19 @@ export async function update(
             userId,
             todoId
         },
-        UpdateExpression: 'set #nameItem = :nameItem, #dueDateItem = :dueDateItem, #doneItem = :doneItem',
+        UpdateExpression: 'set #titleItem = :titleItem, #contentItem = :contentItem',
         ExpressionAttributeNames: {
-            '#nameItem': 'name',
-            '#doneItem': 'done',
-            '#dueDateItem': 'dueDate'
+            '#titleItem': 'title',
+            '#contentItem': 'content'
         },
         ExpressionAttributeValues: {
-            ':nameItem': item.name,
-            ':doneItem': item.done,
-            ':dueDateItem': item.dueDate
+            ':titleItem': item.title,
+            ':contentItem': item.content,
         },
         ReturnValues: 'ALL_NEW'
     };
     const result = await documentClient.update(params).promise();
-    const updatedTodo: TodoUpdate = result.Attributes as TodoUpdate;
+    const updatedTodo: PostUpdate = result.Attributes as PostUpdate;
     logger.info("Updated Todo");
     return updatedTodo;
 }

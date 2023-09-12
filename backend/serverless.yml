@@ -1,7 +1,7 @@
 # TODO: Change the name of the org 
 org: hieuchunhat
-app: serverless-todo-app
-service: serverless-todo-app
+app: serverless-posting-app
+service: serverless-posting-app
 
 plugins:
   - serverless-webpack
@@ -23,9 +23,9 @@ provider:
   # Use these variables in the functions and resouorces section below. For example, 
   # ${self:provider.environment.ATTACHMENT_S3_BUCKET}
   environment:
-    TODOS_TABLE: Todos-${self:provider.stage}
-    TODOS_CREATED_AT_INDEX: CreatedAtIndex
-    ATTACHMENT_S3_BUCKET: hieuchunhat-serverless-c4-todo-images-${self:provider.stage}
+    POST_TABLE: posting-${self:provider.stage}
+    POST_CREATED_AT_INDEX: CreatedAtIndex
+    ATTACHMENT_S3_BUCKET: hieuchunhat-serverless-posting-images-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
 
   logs:
@@ -37,15 +37,15 @@ custom:
     api:
       info:
         version: v1.0.0
-        title: Todo API
-        description: serverless todo api
+        title: Posting API
+        description: serverless posting api
     models:
-      - name: CreateTodoRequest
+      - name: CreatePostRequest
         contentType: application/json
-        schema: ${file(models/create-todo-model.json)}
-      - name: UpdateTodoRequest
+        schema: ${file(models/create-post-model.json)}
+      - name: UpdatePostRequest
         contentType: application/json
-        schema: ${file(models/update-todo-model.json)}
+        schema: ${file(models/update-post-model.json)}
 
 functions:
 
@@ -54,15 +54,15 @@ functions:
 
   # TODO: Configure this function - 
   # Provide iamRoleStatements property for performing Actions on DynamoDB
-  GetTodos:
-    handler: src/lambda/http/getTodos.handler
+  GetPosts:
+    handler: src/lambda/http/getPosts.handler
     events:
       - http:
           method: get
-          path: todos
+          path: posts
           cors: true
           authorizer: Auth
-          reqValidatorName: RequestBodyValidatorToDos
+          reqValidatorName: RequestBodyValidatorPosts
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -71,11 +71,11 @@ functions:
       - Effect: Allow
         Action:
           - dynamodb:Query
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.POST_TABLE}
       - Effect: Allow
         Action:
           - dynamodb:Query
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}/index/${self:provider.environment.TODOS_CREATED_AT_INDEX}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.POST_TABLE}/index/${self:provider.environment.POST_CREATED_AT_INDEX}
       - Effect: Allow
         Action:
           - xray:PutTraceSegments
@@ -87,25 +87,25 @@ functions:
   # Provide iamRoleStatements property. Decide the Actions and AWS Resource. 
   # To refer to an AWS resource defined in the "Resources" section, you can use "Resource: !GetAtt <resource-name>.Arn"
   # To validate incoming HTTP requests, we have provided the request schemas in function definition below. 
-  CreateTodo:
-    handler: src/lambda/http/createTodo.handler
+  CreatePost:
+    handler: src/lambda/http/createPost.handler
     events:
       - http:
           method: post
-          path: todos
+          path: posts
           cors: true
           authorizer: Auth
-          reqValidatorName: RequestBodyValidatorToDos
+          reqValidatorName: RequestBodyValidatorPosts
           documentation:
-            summary: Create a new item todo
-            description: Create a new item todo
+            summary: Create a new item post
+            description: Create a new item post
             requestModels:
-              'application/json': CreateTodoRequest
+              'application/json': CreatePostRequest
     iamRoleStatements:
       - Effect: Allow
         Action:
           - dynamodb:PutItem
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.POST_TABLE}
       - Effect: Allow
         Action:
           - xray:PutTraceSegments
@@ -115,26 +115,26 @@ functions:
 
   # TODO: Configure this function
   # Provide property for setting up CORS, Authorizer, iamRoleStatements, and request schemas
-  UpdateTodo:
-    handler: src/lambda/http/updateTodo.handler
+  UpdatePost:
+    handler: src/lambda/http/updatePost.handler
     events:
       - http:
           cors: true
-          path: todos/{todoId}
+          path: posts/{postId}
           method: patch
           authorizer: Auth
-          reqValidatorName: RequestBodyValidatorToDos
+          reqValidatorName: RequestBodyValidatorPosts
           documentation:
-            summary: Update a item todo
-            description: Update a item todo
+            summary: Update a item post
+            description: Update a item post
             requestModels:
-              'application/json': UpdateTodoRequest
+              'application/json': UpdatePostRequest
     iamRoleStatements:
       - Effect: Allow
         Action:
           - dynamodb:GetItem
           - dynamodb:UpdateItem
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.POST_TABLE}
       - Effect: Allow
         Action:
           - xray:PutTelemetryRecords
@@ -144,21 +144,21 @@ functions:
 
   # TODO: Configure this function
   # Provide property for setting up CORS, Authorizer, iamRoleStatements
-  DeleteTodo:
-    handler: src/lambda/http/deleteTodo.handler
+  DeletePost:
+    handler: src/lambda/http/deletePost.handler
     events:
       - http:
           cors: true
-          path: todos/{todoId}
+          path: posts/{postId}
           method: delete
           authorizer: Auth
-          reqValidatorName: RequestBodyValidatorToDos
+          reqValidatorName: RequestBodyValidatorPosts
     iamRoleStatements:
       - Effect: Allow
         Action:
           - dynamodb:GetItem
           - dynamodb:DeleteItem
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.POST_TABLE}
       - Effect: Allow
         Action:
           - xray:PutTraceSegments
@@ -173,16 +173,16 @@ functions:
     events:
       - http:
           cors: true
-          path: todos/{todoId}/attachment
+          path: posts/{postId}/attachment
           method: post
           authorizer: Auth
-          reqValidatorName: RequestBodyValidatorToDos
+          reqValidatorName: RequestBodyValidatorPosts
     iamRoleStatements:
       - Effect: Allow
         Action:
           - dynamodb:UpdateItem
           - dynamodb:GetItem
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.POST_TABLE}
       - Effect: Allow
         Action:
           - s3:PutObject
@@ -196,7 +196,7 @@ functions:
 
 resources:
   Resources:
-    RequestBodyValidatorToDos:
+    RequestBodyValidatorPosts:
       Type: AWS::ApiGateway::RequestValidator
       Properties:
         Name: 'request-body-validator'
@@ -220,25 +220,25 @@ resources:
           Ref: ApiGatewayRestApi
     
     # TODO: Create a DynamoDB table with local secondary index and a composite key
-    TodosTable:
+    PostsTable:
       Type: AWS::DynamoDB::Table
       Properties:
         AttributeDefinitions:
           - AttributeName: userId
             AttributeType: S
-          - AttributeName: todoId
+          - AttributeName: postId
             AttributeType: S
           - AttributeName: createdAt
             AttributeType: S
         KeySchema:
             - AttributeName: userId
               KeyType: HASH
-            - AttributeName: todoId
+            - AttributeName: postId
               KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
-        TableName: ${self:provider.environment.TODOS_TABLE}
+        TableName: ${self:provider.environment.POST_TABLE}
         LocalSecondaryIndexes:
-          - IndexName: ${self:provider.environment.TODOS_CREATED_AT_INDEX}
+          - IndexName: ${self:provider.environment.POST_CREATED_AT_INDEX}
             KeySchema:
               - AttributeName: userId
                 KeyType: HASH
