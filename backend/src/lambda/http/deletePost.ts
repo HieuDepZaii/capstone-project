@@ -4,7 +4,7 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import * as middy from 'middy'
 import { cors, httpErrorHandler } from 'middy/middlewares'
 
-import { deletePost } from '../../helpers/todos'
+import { deletePost } from '../../helpers/posts'
 import { getUserId } from '../utils'
 
 export const handler = middy(
