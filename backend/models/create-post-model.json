@@ -12,15 +12,11 @@
       "type": "string",
       "minLength": 1,
       "maxLength": 255
-    },
-    "createDate": {
-      "type": "string"
     }
   },
   "required": [
     "title",
-    "content",
-    "createDate"
+    "content"
   ],
   "additionalProperties": false
 }

@@ -3,5 +3,5 @@
  */
 export interface UpdatePostRequest {
   title: string
-  content
+  content: string
 }

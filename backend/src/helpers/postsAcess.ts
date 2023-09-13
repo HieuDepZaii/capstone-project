@@ -46,14 +46,14 @@ export async function create(item: PostItem): Promise<PostItem> {
 export async function update(
     item: PostUpdate,
     userId: string,
-    todoId: string
+    postId: string
 ): Promise<PostUpdate> {
-    logger.info("Updating Todo", { userId: userId, todoId: todoId });
+    logger.info("Updating Todo", { userId: userId, postId: postId });
     const params: DocumentClient.UpdateItemInput = {
         TableName: tableName,
         Key: {
             userId,
-            todoId
+            postId
         },
         UpdateExpression: 'set #titleItem = :titleItem, #contentItem = :contentItem',
         ExpressionAttributeNames: {
@@ -67,17 +67,17 @@ export async function update(
         ReturnValues: 'ALL_NEW'
     };
     const result = await documentClient.update(params).promise();
-    const updatedTodo: PostUpdate = result.Attributes as PostUpdate;
+    const updatedPost: PostUpdate = result.Attributes as PostUpdate;
     logger.info("Updated Todo");
-    return updatedTodo;
+    return updatedPost;
 }
 
-export async function remove(userId: string, todoId: string): Promise<string> {
-    logger.info("Removing Todo", { userId: userId, todoId: todoId });
+export async function remove(userId: string, postId: string): Promise<string> {
+    logger.info("Removing Todo", { userId: userId, postId: postId });
     const params = {
         Key: {
             userId: userId,
-            todoId: todoId
+            postId: postId
         },
         TableName: tableName
     };

@@ -24,10 +24,10 @@ export async function createPost(userId: string, request: CreatePostRequest): Pr
     });
 }
 
-export async function updatePost(userId: string, todoId: string, request: UpdatePostRequest): Promise<PostUpdate> {
-    return TodoAccess.update({ ...request }, userId, todoId);
+export async function updatePost(userId: string, postId: string, request: UpdatePostRequest): Promise<PostUpdate> {
+    return TodoAccess.update({ ...request }, userId, postId);
 }
 
-export async function deletePost(userId: string, todoId: string): Promise<string> {
-    return TodoAccess.remove(userId, todoId);
+export async function deletePost(userId: string, postId: string): Promise<string> {
+    return TodoAccess.remove(userId, postId);
 }
