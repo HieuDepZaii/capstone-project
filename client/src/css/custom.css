@@ -1,0 +1,8 @@
+/* Your CSS stylesheet */
+.custom-card {
+  width: 400px; /* Adjust the width as needed */
+}
+
+.post-item{
+  margin-bottom: 2em;
+}

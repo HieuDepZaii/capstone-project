@@ -31,3 +31,6 @@
     transform: rotate(360deg);
   }
 }
+.custom-card {
+  width: 400px; /* Adjust the width as needed */
+}
