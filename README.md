@@ -1,5 +1,5 @@
 # Serverless Posting app
-
+this application is use for posting post into app like twitter
 this capstone project is based on Serverless Application project
 
 # Run the frontend
