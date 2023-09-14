@@ -151,7 +151,7 @@ export class EditTodo extends React.PureComponent<
               onChange={this.handleFileChange}
             />
           </Form.Field>
-          <Button type='submit'>Submit</Button>
+          <Button type='submit'>Update</Button>
           {/* {this.renderButton()} */}
         </Form>
       </div>
