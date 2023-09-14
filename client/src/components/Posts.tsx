@@ -78,7 +78,7 @@ export class Todos extends React.PureComponent<PostsProps, PostsState> {
     // const seconds = String(date.getSeconds()).padStart(2, '0');
 
     // Format the date as YYYY-mm-dd hh:mm:ss
-    const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}`;
+    const formattedDateTime = `${year}-${month}-${day} at ${hours}:${minutes}`;
     return formattedDateTime;
   }
   onTodoCreate = async () => {
