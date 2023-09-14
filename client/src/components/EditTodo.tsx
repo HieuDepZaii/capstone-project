@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Form, Button, Dimmer, Loader } from 'semantic-ui-react'
 import Auth from '../auth/Auth'
-import { createPost, getUploadUrl, patchPost, uploadFile } from '../api/todos-api'
+import { getUploadUrl, patchPost, uploadFile } from '../api/todos-api'
 import { UpdatePostRequest } from '../types/UpdatePostRequest'
 
 enum UploadState {

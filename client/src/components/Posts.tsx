@@ -7,13 +7,11 @@ import {
   Divider,
   Grid,
   Header,
-  Icon,
-  Input,
   Image,
-  Loader, Form, TextArea, Label, Item, Card, Segment, Dimmer
+  Loader, Form, Item, Card, Dimmer
 } from 'semantic-ui-react'
 
-import { createPost, deletePost, getPosts, patchPost } from '../api/todos-api'
+import { createPost, deletePost, getPosts } from '../api/todos-api'
 import Auth from '../auth/Auth'
 import { Post } from '../types/Post'
 import '../css/custom.css'
